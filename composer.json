@@ -1,5 +1,5 @@
 {
-  "name": "toplan/phpsms",
+  "name": "rocketyang/phpsms",
   "description": "sms send library for php, support the main SMS service provider.",
   "license": "MIT",
   "version": "0.1.4",
@@ -12,7 +12,8 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "toplan/task-balancer": "~0.1.1"
+    "toplan/task-balancer": "~0.1.1",
+    "yiisoft/yii2": "dev-master"
   },
   "autoload": {
     "psr-4": {
