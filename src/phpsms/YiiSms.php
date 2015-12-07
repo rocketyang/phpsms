@@ -70,23 +70,13 @@ class YiiSms extends Component
 
 
        $this->trigger('beforeSend');
-       $success = false;
-       $results = Sms::make()
+       $result = Sms::make()
            ->to($to)
            ->content($content)
            ->send($queue);
-        foreach($results as $r) {
-           if ($r['success'] === true) {
-               $success = true;
-           }
-       }
-
-       if (!$success) {
-           \Yii::error($results);
-       }
 
        $this->trigger('afterSend');
-       return $success;
+       return $result;
    }
 
 
@@ -106,20 +96,11 @@ class YiiSms extends Component
    public function voice($to, $content, $queue=true) {
 
        $this->trigger('beforeVoice');
-       $success = false;
        $result = Sms::voice($content)
            ->to($to)
            ->send($queue);
-        foreach($results as $r) {
-           if ($r['success'] === true) {
-               $success = true;
-           }
-        }
-       if (!$success) {
-           Yii::error($results);
-       }
        $this->trigger('afterVoice');
-       return $success;
+       return $result;
 
    }
 
