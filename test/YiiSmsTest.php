@@ -15,15 +15,15 @@ $config = [
 
     'agentsConfig' => [
         'YunPian' => [
-            'apikey' => '122222343434324d2f17f8aa201611785a'
+            'apikey' => '125057bac5924d2f17f8aa201611785a'
         ],
 
         'Luosimao' => [
-            'apikey' => '3068537108b2xxxxxx71ba9e'
+            'apikey' => '3068537108b20193e88219871bafd491'
         ]
     ]
 ];
 
 $yiiSms = \Yii::createObject($config);
-$result = $yiiSms->send('13798164261', 'hello【云片网】');
+$result = $yiiSms->send('13798164261', '【小贷集市】您的验证码是hello ');
 var_dump($result);

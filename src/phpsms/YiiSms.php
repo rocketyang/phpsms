@@ -99,6 +99,14 @@ class YiiSms extends Component
        $result = Sms::voice($content)
            ->to($to)
            ->send($queue);
+       //  foreach($results as $r) {
+       //     if ($r['success'] === true) {
+       //         $success = true;
+       //     }
+       //  }
+       // if (!$success) {
+       //     Yii::error($results);
+       // }
        $this->trigger('afterVoice');
        return $result;
 
