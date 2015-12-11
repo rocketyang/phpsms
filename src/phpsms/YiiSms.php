@@ -13,104 +13,96 @@ use Toplan\TaskBalance\Balancer;
  */
 class YiiSms extends Component
 {
-   /**
-    * @var 可用代理名称
-    */
-   public $agentsName;
-
-   
-   /**
-    * @var 代理配置
-    */
-   public $agentsConfig;
-   
-   /**
-    * @var 是否启用队列 TODO
-    */
-   public $enableQueue;
-
-   /**
-    * @var 短信模板
-    *   'to' => null,
-    *    'templates' => [],
-    *    'content' => '',
-    *    'templateData' => [],
-    *    'voiceCode' => null,
-    */
-   public $templates = false;
-
-   /**
-    * 初始化
-    */
-   public function init() 
-   {
-       if (empty($this->agentsConfig) || empty($this->agentsName)) {
-           throw Exception('$agentsConfig and agentsName is required');
-       }
-       Sms::enable($this->agentsName);
-       Sms::agents($this->agentsConfig);
-   }
+    /**
+     * @var 可用代理名称
+     */
+    public $agentsName;
 
 
-   /**
-    * 简洁短信发送接口
-    * @param $to 接收人
-    * @param $content 短信内容
-    * @param $是否入队列, 未实现
-    * @return array 
-    *    [
-    *    'success' => false,
-    *    'info'  => '',
-    *    'code'  => 0
-    *    ];
-    *
-    */
-   public function send($to, $content, $queue=true) 
-   {
+    /**
+     * @var 代理配置
+     */
+    public $agentsConfig;
+
+    /**
+     * @var 是否启用队列 TODO
+     */
+    public $enableQueue;
+
+    /**
+     * @var 短信模板
+     *   'to' => null,
+     *    'templates' => [],
+     *    'content' => '',
+     *    'templateData' => [],
+     *    'voiceCode' => null,
+     */
+    public $templates = [];
+
+    /**
+     * 初始化
+     */
+    public function init() 
+    {
+        if (empty($this->agentsConfig) || empty($this->agentsName)) {
+            throw Exception('$agentsConfig and agentsName is required');
+        }
+        Sms::enable($this->agentsName);
+        Sms::agents($this->agentsConfig);
+    }
 
 
-       $this->trigger('beforeSend');
-       $result = Sms::make()
-           ->to($to)
-           ->content($content)
-           ->send($queue);
+    /**
+     * 简洁短信发送接口
+     * @param $to 接收人
+     * @param $content 短信内容
+     * @param $是否入队列, 未实现
+     * @return array 
+     *    [
+     *    'success' => false,
+     *    'info'  => '',
+     *    'code'  => 0
+     *    ];
+     *
+     */
+    public function send($to, $content, $queue=true) 
+    {
 
-       $this->trigger('afterSend');
-       return $result;
-   }
+
+        $this->trigger('beforeSend');
+        $result = Sms::make()
+            ->template($this->templates)
+            ->to($to)
+            ->content($content)
+            ->send($queue);
+        $this->trigger('afterSend');
+        return $result;
+    }
 
 
-   /**
-    * 简洁语音发送接口
-    * @param $to 接收人
-    * @param $content 短信内容
-    * @param $是否入队列, 未实现
-    * @return array 
-    *    [
-    *    'success' => false,
-    *    'info'  => '',
-    *    'code'  => 0
-    *    ];
-    *
-    */
-   public function voice($to, $content, $queue=true) {
+    /**
+     * 简洁语音发送接口
+     * @param $to 接收人
+     * @param $content 短信内容
+     * @param $是否入队列, 未实现
+     * @return array 
+     *    [
+     *    'success' => false,
+     *    'info'  => '',
+     *    'code'  => 0
+     *    ];
+     *
+     */
+    public function voice($to, $content, $queue=true) {
 
-       $this->trigger('beforeVoice');
-       $result = Sms::voice($content)
-           ->to($to)
-           ->send($queue);
-       //  foreach($results as $r) {
-       //     if ($r['success'] === true) {
-       //         $success = true;
-       //     }
-       //  }
-       // if (!$success) {
-       //     Yii::error($results);
-       // }
-       $this->trigger('afterVoice');
-       return $result;
+        $this->trigger('beforeVoice');
+        $result = Sms::voice($content)
+            ->to($to)
+            ->send($queue);
+        $this->trigger('afterVoice');
+        return $result;
 
-   }
+    }
 
 
 }
