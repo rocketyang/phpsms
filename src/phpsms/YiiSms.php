@@ -1,6 +1,7 @@
 <?php
 namespace Toplan\PhpSms;
 
+use Yii;
 use Yii\base\Component;
 use Toplan\TaskBalance\Balancer;
 
@@ -30,15 +31,21 @@ class YiiSms extends Component
     public $enableQueue;
 
     /**
-     * @var 短信模板
-     *   'to' => null,
-     *    'templates' => [],
-     *    'content' => '',
-     *    'templateData' => [],
-     *    'voiceCode' => null,
+     * @var 模板
      */
-    public $templates = [];
+    public $template = false;
 
+    /**
+     * 编译内容
+     */
+    private function translate($content)
+    {
+
+        $company = Yii::$app->name ? Yii::$app->name : '博汇数码';
+        $trans = ['#content#' => $content, '#company#' => $company];
+        return strtr($this->template, $trans);
+    }
+    
     /**
      * 初始化
      */
@@ -50,6 +57,8 @@ class YiiSms extends Component
         Sms::enable($this->agentsName);
         Sms::agents($this->agentsConfig);
     }
+
+
 
 
     /**
@@ -68,10 +77,12 @@ class YiiSms extends Component
     public function send($to, $content, $queue=true) 
     {
 
-
         $this->trigger('beforeSend');
+        if ($this->template !== false) {
+            $content = $this->translate($content);
+        }
         $result = Sms::make()
-            ->template($this->templates)
+            // ->template($this->templates)
             ->to($to)
             ->content($content)
             ->send($queue);
@@ -93,16 +104,16 @@ class YiiSms extends Component
      *    ];
      *
      */
-    public function voice($to, $content, $queue=true) {
-
-        $this->trigger('beforeVoice');
-        $result = Sms::voice($content)
-            ->to($to)
-            ->send($queue);
-        $this->trigger('afterVoice');
-        return $result;
-
-    }
-
+    // public function voice($to, $content, $queue=true) {
+    //
+    //     $this->trigger('beforeVoice');
+    //     $result = Sms::voice($content)
+    //         ->to($to)
+    //         ->send($queue);
+    //     $this->trigger('afterVoice');
+    //     return $result;
+    //
+    // }
+    //
 
 }
