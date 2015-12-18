@@ -77,7 +77,6 @@ class YiiSms extends Component
     public function send($to, $content, $queue=true) 
     {
 
-
         $this->trigger('beforeSend');
         if ($this->template !== false) {
             $content = $this->translate($content);
